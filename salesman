@@ -1,0 +1,36 @@
+create database salesman;
+use salesman;
+create table salesman(s_id int primary key,name varchar(20),city varchar(20),commission int);
+create table customer(c_id int primary key,name varchar(20),city varchar(20));
+create table orders(o_no int,p_amt float,ord_date date,c_id int,s_id int,foreign key(c_id) references customer(c_id),foreign key(s_id) references salesman(s_id));
+INSERT INTO SALESMAN VALUES
+(101, 'John Smith', 'New York', 500),
+(102, 'Amit Patel', 'Chicago', 700),
+(103, 'Linda Brown', 'Los Angeles', 650),
+(104, 'Robert White', 'Houston', 550),
+(105, 'Sophie Turner', 'Chicago', 800);
+INSERT INTO CUSTOMER VALUES
+(201, 'Alice Johnson', 'Chicago'),
+(202, 'Mark Green', 'New York'),
+(203, 'Rachel Adams', 'Los Angeles'),
+(204, 'Tom Hardy', 'Houston'),
+(205, 'Emma Davis', 'Miami');
+INSERT INTO ORDERS VALUES
+(301, 2500.50, '2017-12-20', 201, 102),
+(302, 1800.00, '2019-06-20', 202, 101),
+(303, 3500.75, '2020-01-10', 203, 103),
+(304, 1200.00, '2021-09-05', 204, 104),
+(305, 5000.00, '2022-03-25', 201, 105);
+select c_id,name from customer;
+
+select s_id
+from salesman where
+commission=(select max(commission) from salesman);
+
+select * 
+from orders
+order by p_amt desc;
+
+select salesman.name as "salesman", customer.name,customer.city
+from salesman,customer
+where salesman.city=customer.city;
