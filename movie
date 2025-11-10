@@ -1,0 +1,104 @@
+create database movie;
+use movie;
+create table actor(
+act_id int primary key, 
+act_name varchar(20),
+act_gender varchar(6));
+
+create table director(
+dir_id int primary key, 
+dir_name varchar(20),
+dir_phone int);
+
+create table movies(
+mov_id int primary key, 
+mov_title varchar(20),
+mov_year int,
+mov_lang varchar(20),
+dir_id int,
+foreign key(dir_id) references director(dir_id));
+
+create table movie_cast(
+act_id int ,
+mov_id int , 
+Role varchar(20),
+foreign key(act_id) references actor(act_id),
+foreign key(mov_id) references movies(mov_id));
+
+create table rating(
+mov_id int, 
+rev_stars int,
+foreign key(mov_id) references movies(mov_id));
+
+INSERT INTO DIRECTOR (Dir_id, Dir_Name, Dir_Phone) VALUES
+(1, 'Hitchcock', '111222333'),
+(2, 'Robert Zemeckis', '444555666'),
+(3, 'Russo Brothers', '777888999'),
+(4, 'James Cameron', '123456789'),
+(5, 'Steven Spielberg', '987654321');
+
+INSERT INTO ACTOR (Act_id, Act_Name, Act_Gender) VALUES
+(101, 'Tom Hanks', 'M'),
+(102, 'Scarlett Johansson', 'F'),
+(103, 'Anthony Perkins', 'M'),
+(104, 'Sam Neill', 'M'),
+(105, 'Kate Winslet', 'F');
+
+INSERT INTO MOVIES (Mov_id, Mov_Title, Mov_Year, Mov_Lang, Dir_id) VALUES
+(1001, 'Psycho', 1960, 'English', 1),
+(1002, 'Forrest Gump', 1994, 'English', 2),
+(1003, 'Cast Away', 2000, 'English', 2),
+(1004, 'The Horse Whisperer', 1998, 'English', 4),
+(1005, 'Avengers: Endgame', 2019, 'English', 3),
+(1006, 'Jurassic Park', 1993, 'English', 5),
+(1007, 'Titanic', 1997, 'English', 4);
+
+INSERT INTO MOVIE_CAST (Act_id, Mov_id, Role) VALUES
+(103, 1001, 'Norman Bates'),       
+(101, 1002, 'Forrest'),          
+(101, 1003, 'Chuck Noland'),     
+(102, 1004, 'Grace MacLean'),    
+(102, 1005, 'Black Widow'),      
+(104, 1006, 'Dr. Alan Grant'),   
+(105, 1007, 'Rose DeWitt Bukater');
+
+INSERT INTO RATING (Mov_id, Rev_Stars) VALUES
+(1001, 4.5),
+(1001, 5.0),  
+(1002, 4.0),
+(1007, 4.8),
+(1006, 4.0);
+
+select mov_title
+from movies 
+where dir_id=(select dir_id 
+				from director 
+				where dir_name="Hitchcock");
+
+select mov_title
+from movies 
+where
+mov_id=(select mov_id
+	from movie_cast
+	group by act_id,mov_id 
+	having count(act_id)>1);
+
+select * from movies s join movie_cast t where s.mov_id=t.mov_id; #this is to understand how join works
+
+select s.mov_title
+from movies s, movie_cast t 
+where s.mov_id=t.mov_id and t.act_id in (
+	select act_id 
+	from movie_cast 
+	group by act_id
+	having count(act_id)>=2);
+
+select act_name,mov_title,mov_year
+from actor a 
+join movie_cast c
+on a.act_id=c.act_id
+join movies m
+on c.mov_id=m.mov_id 
+where mov_year not between 2000 and 2015;
+
+select m.mov_title,r.rev_stars from movies m,rating r where r.rev_stars>=1;
