@@ -1,0 +1,48 @@
+create database employee;
+use employee;
+
+create table location(location_id int primary key, regional_group varchar(20));
+create table job(job_id int primary key, Functioning varchar(20));
+create table Department(department_id int primary key,name varchar(20),location_id int,foreign key(location_id) references location(location_id));
+create table employee(employee_id int primary key,last_name varchar(20),first_name varchar(20),middle_name varchar(20),job_id int,manager_id int,hiredate date,salary int,comm int,department_id int,
+foreign key(job_id) references job(job_id),foreign key(department_id) references department(department_id));
+
+insert into location (location_id,regional_group)values
+(122,"NEW YORK"),
+(123,"DALLAS"),
+(124,"CHICAGO"),
+(167,"BOSTON");
+
+insert into department(department_id,name,location_id)values
+(10,"accounting",122),
+(20,"research",124),
+(30,"sales",123),
+(40,"operations",167);
+
+insert into job(job_id,Functioning) values
+(667,"clerk"),
+(668,"staff"),
+(669,"analyst"),
+(670,"salesperson"),
+(671,"manager"),
+(672,"president");
+
+insert into employee(employee_id ,last_name,first_name ,middle_name ,job_id ,manager_id ,hiredate ,salary ,comm ,department_id) values
+(7839,"meghan","john","s",672,NULL,"2014-12-12",5500,NULL,30),
+(7369,"smith","john","q",667,7521,"2018-12-17",800,NULL,20),
+(7499,"allen","kevin","j",670,7507,"2017-02-20",1600,300,30),
+(7505,"doyle","jean","k",671,7839,"2015-04-04",2850,NULL,30),
+(7506,"dennis","lynn","s",671,7839,"2015-05-15",2750,NULL,30),
+(7507,"baker","leslie","d",671,7839,"2015-06-10",2200,NULL,40),
+(7521,"wark","cynthie","d",670,7505,"2015-02-22",1250,500,30);
+
+select employee_id,last_name from employee order by employee_id asc;
+select employee_id,last_name from employee order by salary desc;
+
+select department_id,count(*) from employee group by department_id;
+select department_id,max(salary),min(salary),avg(salary) from employee group by department_id;
+select job_id,max(salary),min(salary),avg(salary) from employee group by job_id ;
+select datename(mmhiredate) ,count(*) no_of_employee from employee group by month(hiredate);
+select month(hiredate) ,count(*) no_of_employee from employee group by month(hiredate);
+select datepart(yy,hiredate) ,count(*) no_of_employee from employee group by datepart(yy,hiredate);
+select year(hiredate) ,count(*) no_of_employee from employee group by year(hiredate) ;
