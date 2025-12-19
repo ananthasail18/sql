@@ -45,4 +45,27 @@ select job_id,max(salary),min(salary),avg(salary) from employee group by job_id 
 select datename(mmhiredate) ,count(*) no_of_employee from employee group by month(hiredate);
 select month(hiredate) ,count(*) no_of_employee from employee group by month(hiredate);
 select datepart(yy,hiredate) ,count(*) no_of_employee from employee group by datepart(yy,hiredate);
-select year(hiredate) ,count(*) no_of_employee from employee group by year(hiredate) ;
+select year(hiredate) ,count(*) no_of_employee from employee group by year(hiredate);
+select month(hiredate) ,count(*) no_of_employee from employee group by month(hiredate) order by month(hiredate);
+
+select count(*),year(hiredate) from employee where year(hiredate)=2015 group by year(hiredate) ;
+select count(*),year(hiredate),month(hiredate) from employee where year(hiredate)=2015 and month(hiredate)=2 group by year(hiredate),month(hiredate) ;
+select count(*),year(hiredate),month(hiredate) from employee where hiredate like '2015-04___' group by year(hiredate),month(hiredate) ;
+select department_id from employee where hiredate like "1985-04___" group by department_id having count(department_id)>=3;
+select first_name from  employee where salary=(select max(salary) from employee);
+select first_name from employee where department_id=(select department_id from department where name="sales");
+select first_name from employee where job_id=(select job_id from job where functioning="clerk");
+select first_name from employee where department_id=(select department_id from department where location_id=(select location_id from location where regional_group="NEW YORK"));
+select count(*) from employee where department_id=(select department_id from department where name="sales");
+
+delete 
+from employee 
+where department_id=(select department_id 
+from department 
+where name="accounting");
+
+select * from employee where salary=(select max(salary) from employee where salary<(select max(salary) from employee));
+
+select * from employee where salary>all(select salary from employee where department_id=30);
+select * from employee where salary>all(select min(salary) from employee where department_id=30);
+select * from department where department_id not in (select department_id from employee);
